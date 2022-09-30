@@ -12,10 +12,9 @@ const fetchMyIP = function (callback) {
       const msg = `Status Code ${response.statusCode} when fetching IP. Response: ${body}`;
       callback(Error(msg), null);
       return;
-
-      const myIP = JSON.parse(body).ip;
-      callback(null, myIP);
     }
+    const myIP = JSON.parse(body).ip;
+    callback(null, myIP);
   });
 };
 
