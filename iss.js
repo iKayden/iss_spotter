@@ -19,26 +19,46 @@ const request = require("request");
 //   });
 // };
 
-const fetchCoordByIP = function (ip, callback) {
-  const geoCoord = `http://ipwho.is/${ip}`;
-  request(geoCoord, (error, response, body) => {
+// const fetchCoordByIP = function (ip, callback) {
+//   const geoCoord = `http://ipwho.is/${ip}`;
+//   request(geoCoord, (error, response, body) => {
+//     if (error) {
+//       callback(error, null);
+//       return;
+//     }
+//     const parsedBody = JSON.parse(body);
+
+//     if (response.statusCode !== 200) {
+//       const msg = `Status Code ${response.statusCode} when fetching IP. Response: ${body}`;
+//       callback(Error(msg), null);
+//       return;
+//     }
+
+//     const { latitude, longitude } = parsedBody;
+//     callback(null, { latitude, longitude });
+//   });
+// };
+
+const fetchISSFlyOverTimes = function (coords, callback) {
+  const apiURL = `https://iss-pass.herokuapp.com/json/?lat=${coords.latitude}&lon=${coords.longitude}`;
+  request(apiURL, (error, response, body) => {
     if (error) {
       callback(error, null);
       return;
     }
-    const parsedBody = JSON.parse(body);
-
     if (response.statusCode !== 200) {
-      const msg = `Status Code ${response.statusCode} when fetching IP. Response: ${body}`;
-      callback(Error(msg), null);
+      callback(
+        Error(`Status Code ${response.statusCode} when fetching IP: ${body}`),
+        null
+      );
       return;
     }
 
-    const { latitude, longitude } = parsedBody;
-    callback(null, { latitude, longitude });
+    const data = JSON.parse(body).response;
+    console.log(data);
+    callback(null, data);
   });
 };
-
-module.exports = { fetchCoordByIP };
+module.exports = { fetchISSFlyOverTimes };
 
 // http://ipwho.is/66.183.245.15
